@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Inteligência Profissional e Oportunidades</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Ícones Phosphor (CDN) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Configuração customizada do Tailwind para manter a consistência visual -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            purple: '#7e22ce', // purple-700
+                            dark: '#0f172a', // slate-900
+                            light: '#f8fafc' // slate-50
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-light font-sans text-slate-800 antialiased">
+
+    <!-- 1. Cabeçalho (Navbar) -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logotipo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer">
+                    <i class="ph ph-briefcase text-brand-purple text-3xl mr-2"></i>
+                    <span class="font-extrabold text-xl tracking-tight text-brand-dark">
+                        Portal<span class="text-brand-purple">Inteligência</span>
+                    </span>
+                </div>
+                
+                <!-- Menu Desktop -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#vagas" class="text-slate-600 hover:text-brand-purple font-medium transition-colors">Buscar Vagas</a>
+                    <a href="#empresas" class="text-slate-600 hover:text-brand-purple font-medium transition-colors">Para Empresas</a>
+                    <button class="bg-brand-dark hover:bg-slate-800 text-white px-5 py-2.5 rounded-full font-semibold transition-all shadow-md">
+                        Entrar / Cadastrar
+                    </button>
+                </div>
+
+                <!-- Botão Menu Mobile -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-brand-purple focus:outline-none">
+                        <i class="ph ph-list text-3xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menu Mobile (Oculto por padrão) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#vagas" class="block px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-purple rounded-md">Buscar Vagas</a>
+                <a href="#empresas" class="block px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-purple rounded-md">Para Empresas</a>
+                <button class="w-full text-left px-3 py-2 text-base font-medium text-brand-purple hover:bg-slate-50 rounded-md">
+                    Entrar / Cadastrar
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. Seção de Destaque (Hero) -->
+    <section class="bg-brand-dark text-white pt-20 pb-24 px-4 relative overflow-hidden">
+        <!-- Elemento decorativo de fundo -->
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                A vaga certa. <br class="md:hidden"> 
+                <span class="text-purple-400">A qualificação exata.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
+                Encontre oportunidades ideais para o seu perfil e descubra o que falta para você ser o candidato perfeito através da nossa Inteligência Artificial.
+            </p>
+
+            <!-- Barra de Pesquisa -->
+            <div class="bg-white p-2 md:p-3 rounded-2xl md:rounded-full shadow-2xl max-w-3xl mx-auto flex flex-col md:flex-row gap-3">
+                <div class="flex-1 flex items-center bg-slate-50 rounded-xl md:rounded-full px-4 py-3 md:py-2 border border-transparent focus-within:border-brand-purple transition-colors">
+                    <i class="ph ph-magnifying-glass text-slate-400 text-xl mr-3"></i>
+                    <input type="text" id="search-cargo" placeholder="Cargo, palavra-chave ou empresa..." class="bg-transparent w-full focus:outline-none text-slate-800 placeholder-slate-400">
+                </div>
+                
+                <div class="w-full md:w-1/3 flex items-center bg-slate-50 rounded-xl md:rounded-full px-4 py-3 md:py-2 border border-transparent focus-within:border-brand-purple transition-colors">
+                    <i class="ph ph-map-pin text-slate-400 text-xl mr-3"></i>
+                    <input type="text" id="search-cidade" placeholder="Cidade ou Estado" class="bg-transparent w-full focus:outline-none text-slate-800 placeholder-slate-400">
+                </div>
+                
+                <button onclick="buscarVagas()" class="bg-brand-purple hover:bg-purple-600 text-white font-bold py-3 md:py-2 px-8 rounded-xl md:rounded-full shadow-lg transition-all w-full md:w-auto flex justify-center items-center">
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Seção Principal: Cards de Vagas -->
+    <section id="vagas" class="py-16 px-4 max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800">Vagas Recentes</h2>
+            <span class="text-sm font-medium text-slate-500 bg-white px-3 py-1 rounded-full shadow-sm border border-slate-200" id="contador-vagas">Carregando...</span>
+        </div>
+
+        <!-- Grid de Vagas -->
+        <div id="job-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Esqueleto de Carregamento (Loading State) -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 animate-pulse">
+                <div class="h-6 bg-slate-200 rounded w-3/4 mb-4"></div>
+                <div class="h-4 bg-slate-200 rounded w-1/2 mb-6"></div>
+                <div class="flex gap-2 mb-6">
+                    <div class="h-6 bg-slate-200 rounded-full w-20"></div>
+                    <div class="h-6 bg-slate-200 rounded-full w-24"></div>
+                </div>
+                <div class="h-10 bg-slate-200 rounded-xl w-full"></div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 animate-pulse hidden md:block">
+                <div class="h-6 bg-slate-200 rounded w-3/4 mb-4"></div><div class="h-4 bg-slate-200 rounded w-1/2 mb-6"></div><div class="flex gap-2 mb-6"><div class="h-6 bg-slate-200 rounded-full w-20"></div><div class="h-6 bg-slate-200 rounded-full w-24"></div></div><div class="h-10 bg-slate-200 rounded-xl w-full"></div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 animate-pulse hidden lg:block">
+                <div class="h-6 bg-slate-200 rounded w-3/4 mb-4"></div><div class="h-4 bg-slate-200 rounded w-1/2 mb-6"></div><div class="flex gap-2 mb-6"><div class="h-6 bg-slate-200 rounded-full w-20"></div><div class="h-6 bg-slate-200 rounded-full w-24"></div></div><div class="h-10 bg-slate-200 rounded-xl w-full"></div>
+            </div>
+        </div>
+        
+        <!-- Mensagem de Vazio ou Erro -->
+        <div id="msg-vazia" class="hidden text-center py-12">
+            <i class="ph ph-magnifying-glass-minus text-5xl text-slate-300 mb-3"></i>
+            <p class="text-slate-500 text-lg">Nenhuma vaga encontrada com estes filtros.</p>
+        </div>
+    </section>
+
+    <!-- 4. Rodapé -->
+    <footer class="bg-white border-t border-slate-200 pt-12 pb-8 px-4 mt-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-sm">
+            <div class="md:col-span-1">
+                <div class="flex items-center mb-4">
+                    <i class="ph ph-briefcase text-brand-purple text-2xl mr-2"></i>
+                    <span class="font-extrabold text-lg text-brand-dark">Portal<span class="text-brand-purple">Inteligência</span></span>
+                </div>
+                <p class="text-slate-500 leading-relaxed">Conectando talentos às melhores oportunidades com o poder da Inteligência Artificial e dados de mercado.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-800 mb-4 uppercase tracking-wider text-xs">Candidatos</h4>
+                <ul class="space-y-2 text-slate-500">
+                    <li><a href="#" class="hover:text-brand-purple">Buscar Vagas</a></li>
+                    <li><a href="#" class="hover:text-brand-purple">Cadastrar Currículo</a></li>
+                    <li><a href="#" class="hover:text-brand-purple">Comprar Créditos</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-800 mb-4 uppercase tracking-wider text-xs">Empresas</h4>
+                <ul class="space-y-2 text-slate-500">
+                    <li><a href="#" class="hover:text-brand-purple">Anunciar Vagas</a></li>
+                    <li><a href="#" class="hover:text-brand-purple">Planos e Assinaturas</a></li>
+                    <li><a href="#" class="hover:text-brand-purple">Integração XML</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-800 mb-4 uppercase tracking-wider text-xs">Legal</h4>
+                <ul class="space-y-2 text-slate-500">
+                    <li><a href="#" class="hover:text-brand-purple">Termos de Uso</a></li>
+                    <li><a href="#" class="hover:text-brand-purple">Política de Privacidade</a></li>
+                    <li><a href="#" class="hover:text-brand-purple">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center text-slate-400 text-xs">
+            <p>&copy; 2026 Portal de Inteligência Profissional. Todos os direitos reservados.</p>
+            <div class="flex space-x-4 mt-4 md:mt-0">
+                <a href="#" class="hover:text-brand-purple text-lg"><i class="ph ph-linkedin-logo"></i></a>
+                <a href="#" class="hover:text-brand-purple text-lg"><i class="ph ph-instagram-logo"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 5. Script de Funcionalidades e Fetch da API -->
+    <script>
+        // URL da sua API hospedada no Render (Substitua pela sua URL real)
+        const API_URL = 'https://sua-api-aqui.onrender.com/api/vagas'; 
+        
+        // Elementos DOM
+        const jobContainer = document.getElementById('job-container');
+        const contadorVagas = document.getElementById('contador-vagas');
+        const msgVazia = document.getElementById('msg-vazia');
+        
+        // Formatar Moeda (BRL)
+        const formatarMoeda = (valor) => {
+            if (!valor) return 'A combinar';
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+        };
+
+        // Buscar vagas na API
+        async function buscarVagas() {
+            const buscaCargo = document.getElementById('search-cargo').value;
+            const buscaCidade = document.getElementById('search-cidade').value;
+            
+            // Mostrar loading limpando o container e escondendo mensagem vazia
+            jobContainer.innerHTML = '<div class="col-span-full text-center py-8 text-slate-500"><i class="ph ph-spinner animate-spin text-3xl mb-2"></i><p>Buscando oportunidades...</p></div>';
+            msgVazia.classList.add('hidden');
+
+            try {
+                // Constrói a URL com parâmetros se existirem
+                const url = new URL(API_URL);
+                if (buscaCargo) url.searchParams.append('busca', buscaCargo);
+                if (buscaCidade) url.searchParams.append('cidade', buscaCidade);
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Erro ao buscar dados');
+                
+                const vagas = await response.json();
+                renderizarVagas(vagas);
+                
+            } catch (error) {
+                console.error("Falha na conexão com a API:", error);
+                // Dados Mockados de fallback para visualização caso a API esteja offline/hibernando no Render
+                const mockVagas = [
+                    { id: 1, titulo: "Analista de Dados Júnior", nome_empresa: "TechCorp Brasil", cidade: "Curitiba", estado: "PR", salario_min: 4500, salario_max: 5500, tipo_vaga: "direta" },
+                    { id: 2, titulo: "Desenvolvedor Front-end React", nome_empresa: "Inova Web", cidade: "Remoto", estado: "BR", salario_min: 7000, salario_max: 9000, tipo_vaga: "xml" },
+                    { id: 3, titulo: "Especialista em Automação", nome_empresa: "Grupo VMA", cidade: "São Paulo", estado: "SP", salario_min: 8000, salario_max: null, tipo_vaga: "direta" }
+                ];
+                renderizarVagas(mockVagas);
+            }
+        }
+
+        // Renderizar os cards HTML
+        function renderizarVagas(vagas) {
+            jobContainer.innerHTML = '';
+            
+            if (vagas.length === 0) {
+                msgVazia.classList.remove('hidden');
+                contadorVagas.textContent = '0 vagas';
+                return;
+            }
+
+            contadorVagas.textContent = `${vagas.length} vaga(s) encontrada(s)`;
+
+            vagas.forEach(vaga => {
+                const tagCor = vaga.tipo_vaga === 'xml' ? 'bg-orange-50 text-orange-700 border-orange-200' : 'bg-green-50 text-green-700 border-green-200';
+                const tagTexto = vaga.tipo_vaga === 'xml' ? 'Via Parceiro' : 'Vaga Direta';
+                const salarioTxt = (vaga.salario_min && vaga.salario_max) 
+                    ? `${formatarMoeda(vaga.salario_min)} - ${formatarMoeda(vaga.salario_max)}` 
+                    : formatarMoeda(vaga.salario_min);
+
+                const cardHTML = `
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow flex flex-col justify-between group">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-slate-900 leading-tight group-hover:text-brand-purple transition-colors">${vaga.titulo}</h3>
+                                <!-- Espaço para logo fictício -->
+                                <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center shrink-0 border border-slate-200">
+                                    <i class="ph ph-buildings text-xl text-slate-400"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2 mb-6">
+                                <p class="text-sm text-slate-600 flex items-center">
+                                    <i class="ph ph-briefcase mr-2 text-slate-400"></i>
+                                    <span class="font-medium">${vaga.nome_empresa || 'Empresa Confidencial'}</span>
+                                </p>
+                                <p class="text-sm text-slate-600 flex items-center">
+                                    <i class="ph ph-map-pin mr-2 text-slate-400"></i>
+                                    ${vaga.cidade} / ${vaga.estado}
+                                </p>
+                                <p class="text-sm text-slate-600 flex items-center font-medium text-slate-700">
+                                    <i class="ph ph-currency-circle-dollar mr-2 text-green-500"></i>
+                                    ${salarioTxt}
+                                </p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold border ${tagCor}">
+                                    ${tagTexto}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full bg-slate-50 hover:bg-brand-purple hover:text-white text-brand-purple font-semibold py-3 rounded-xl transition-colors border border-slate-200 hover:border-transparent flex justify-center items-center">
+                            Ver Detalhes e Aderência <i class="ph ph-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                `;
+                jobContainer.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+
+        // Toggle do Menu Mobile
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Carregar vagas iniciais ao abrir a página
+        document.addEventListener('DOMContentLoaded', buscarVagas);
+    </script>
+</body>
+  </html>
+  
