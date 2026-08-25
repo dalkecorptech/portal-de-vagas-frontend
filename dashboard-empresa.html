@@ -52,21 +52,32 @@
         <div class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-3xl font-bold text-slate-800">Gestão de Vagas</h1>
-                <p class="text-slate-500 mt-1">Publique novas oportunidades e atraia talentos.</p>
+                <p class="text-slate-500 mt-1">Gerencie suas oportunidades e atraia talentos.</p>
             </div>
             <button id="btn-abrir-form" onclick="alternarFormulario(true)" class="bg-brand-purple hover:bg-purple-600 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-md flex items-center">
-                <i class="ph ph-plus-circle text-xl mr-2"></i> Publicar Vaga
+                <i class="ph ph-plus-circle text-xl mr-2"></i> Publicar Nova Vaga
             </button>
         </div>
 
         <!-- Alerta de Sistema -->
         <div id="sys-alert" class="hidden mb-6 p-4 rounded-xl text-sm font-semibold"></div>
 
-        <!-- Seção: Lista de Vagas (Estado Vazio Inicial) -->
-        <div id="secao-lista" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-10 text-center mt-6 block">
+        <!-- Seção: Estado Vazio Inicial -->
+        <div id="secao-vazia" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-10 text-center mt-6 hidden">
             <i class="ph ph-briefcase text-5xl text-slate-300 mb-4"></i>
-            <h2 class="text-xl font-bold text-slate-800 mb-2">Painel de Vagas</h2>
+            <h2 class="text-xl font-bold text-slate-800 mb-2">Nenhuma vaga publicada</h2>
             <p class="text-slate-500 mb-6 max-w-lg mx-auto">Clique no botão acima para publicar sua primeira vaga e começar a receber candidaturas de profissionais qualificados.</p>
+        </div>
+
+        <!-- Seção: Lista de Vagas da Empresa -->
+        <div id="secao-lista" class="mt-6 block">
+            <div id="grid-vagas-empresa" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Vagas renderizadas via JS entrarão aqui -->
+                <div class="col-span-full text-center py-8 text-slate-500">
+                    <i class="ph ph-spinner animate-spin text-3xl mb-2"></i>
+                    <p>Carregando suas vagas...</p>
+                </div>
+            </div>
         </div>
 
         <!-- Seção: Formulário de Nova Vaga (Oculto por padrão) -->
@@ -79,7 +90,6 @@
             </div>
             
             <form id="form-vaga" class="space-y-6">
-                <!-- Linha 1: Título e Localização -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="md:col-span-2">
                         <label class="block text-sm font-bold text-slate-700 mb-2">Título da Vaga *</label>
@@ -97,21 +107,19 @@
                     </div>
                 </div>
 
-                <!-- Linha 2: Descrição -->
                 <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Descrição Completa da Vaga *</label>
-                    <textarea id="vaga-descricao" required rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Descreva as responsabilidades, o dia a dia e os diferenciais da empresa..."></textarea>
+                    <textarea id="vaga-descricao" required rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Descreva as responsabilidades..."></textarea>
                 </div>
 
-                <!-- Linha 3: Requisitos e Salário -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">Requisitos e Diferenciais *</label>
-                        <textarea id="vaga-requisitos" required rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Ex: Experiência com GCP, Python, Looker Studio..."></textarea>
+                        <textarea id="vaga-requisitos" required rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Ex: Experiência com GCP, Python..."></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">Faixa Salarial (Opcional)</label>
-                        <div class="flex items-center space-x-4 h-[76px]"> <!-- Alinhamento vertical com o textarea -->
+                        <div class="flex items-center space-x-4 h-[76px]">
                             <div class="relative w-full">
                                 <span class="absolute left-3 top-3.5 text-slate-500 font-medium">R$</span>
                                 <input type="number" id="vaga-salariomin" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Mínimo">
@@ -125,11 +133,10 @@
                     </div>
                 </div>
 
-                <!-- Ações do Formulário -->
                 <div class="flex justify-end pt-6 border-t border-slate-100 mt-8">
                     <button type="button" onclick="alternarFormulario(false)" class="mr-4 px-6 py-3 text-slate-600 font-semibold hover:bg-slate-100 rounded-full transition-colors">Cancelar</button>
                     <button type="submit" id="btn-salvar" class="bg-brand-purple hover:bg-purple-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all flex items-center">
-                        <i class="ph ph-paper-plane-tilt mr-2 text-lg"></i> Publicar Vaga Agora
+                        <i class="ph ph-paper-plane-tilt mr-2 text-lg"></i> Publicar Vaga
                     </button>
                 </div>
             </form>
@@ -137,42 +144,103 @@
 
     </main>
 
-    <!-- Script de Autenticação e Integração -->
     <script>
         const API_BASE_URL = 'https://portal-vagas-backend.onrender.com/api';
 
-        // Trava de Segurança
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             const tipoUsuario = localStorage.getItem('tipo_usuario');
             if (!token || tipoUsuario !== 'empresa') {
                 window.location.href = 'login.html';
+                return;
             }
+            carregarMinhasVagas();
         });
 
-        // Função de Logout
         function fazerLogout() {
             localStorage.clear();
             window.location.href = 'index.html';
         }
 
-        // Controle de UI (Mostrar/Esconder Formulário)
         function alternarFormulario(mostrar) {
+            document.getElementById('secao-vazia').style.display = 'none';
             document.getElementById('secao-lista').style.display = mostrar ? 'none' : 'block';
             document.getElementById('secao-formulario').style.display = mostrar ? 'block' : 'none';
             document.getElementById('btn-abrir-form').style.display = mostrar ? 'none' : 'flex';
+            
+            if(!mostrar) carregarMinhasVagas(); // Recarrega a lista ao voltar
         }
 
-        // Sistema de Alertas Visuais
         function mostrarAlerta(msg, tipo = 'success') {
             const sysAlert = document.getElementById('sys-alert');
             sysAlert.textContent = msg;
             sysAlert.className = `mb-6 p-4 rounded-xl text-sm font-semibold block ${tipo === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
-            
-            // Rola a tela suavemente para o alerta
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
             setTimeout(() => sysAlert.classList.add('hidden'), 5000);
+        }
+
+        const formatarMoeda = (valor) => {
+            if (!valor) return 'A combinar';
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+        };
+
+        // Função para Buscar e Listar Vagas
+        async function carregarMinhasVagas() {
+            const token = localStorage.getItem('token');
+            const gridContainer = document.getElementById('grid-vagas-empresa');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/empresa/vagas`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) throw new Error('Falha ao buscar vagas');
+                const vagas = await response.json();
+                
+                gridContainer.innerHTML = ''; // Limpa o loading
+                
+                if (vagas.length === 0) {
+                    document.getElementById('secao-lista').style.display = 'none';
+                    document.getElementById('secao-vazia').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('secao-lista').style.display = 'block';
+                document.getElementById('secao-vazia').style.display = 'none';
+
+                vagas.forEach(vaga => {
+                    const statusClass = vaga.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700';
+                    const salarioTxt = (vaga.salario_min && vaga.salario_max) ? `${formatarMoeda(vaga.salario_min)} - ${formatarMoeda(vaga.salario_max)}` : formatarMoeda(vaga.salario_min);
+                    
+                    const card = `
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="font-bold text-lg text-slate-800 leading-tight">${vaga.titulo}</h3>
+                                    <span class="px-2 py-1 rounded text-xs font-bold ${statusClass}">${vaga.status.toUpperCase()}</span>
+                                </div>
+                                <div class="space-y-1 mb-4 text-sm text-slate-600">
+                                    <p><i class="ph ph-map-pin mr-1"></i> ${vaga.cidade} / ${vaga.estado}</p>
+                                    <p><i class="ph ph-currency-circle-dollar mr-1"></i> ${salarioTxt}</p>
+                                    <p><i class="ph ph-calendar mr-1"></i> Publicada em: ${new Date(vaga.data_publicacao).toLocaleDateString('pt-BR')}</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mt-4 pt-4 border-t border-slate-100">
+                                <button class="flex-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-semibold py-2 rounded-lg transition-colors text-sm">
+                                    Editar
+                                </button>
+                                <button class="flex-1 bg-brand-purple hover:bg-purple-600 text-white font-semibold py-2 rounded-lg transition-colors text-sm">
+                                    Ver Candidatos
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    gridContainer.insertAdjacentHTML('beforeend', card);
+                });
+            } catch (error) {
+                console.error('Erro:', error);
+                gridContainer.innerHTML = '<div class="col-span-full text-center text-red-500 py-4">Erro ao carregar suas vagas.</div>';
+            }
         }
 
         // Submissão do Formulário de Vaga
@@ -182,7 +250,6 @@
             btn.innerHTML = '<i class="ph ph-spinner animate-spin mr-2 text-lg"></i> Publicando...';
             btn.disabled = true;
 
-            // Coleta e formata os dados numéricos
             const minStr = document.getElementById('vaga-salariomin').value;
             const maxStr = document.getElementById('vaga-salariomax').value;
 
@@ -201,26 +268,23 @@
             try {
                 const response = await fetch(`${API_BASE_URL}/vagas`, {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify(payload)
                 });
                 
                 const data = await response.json();
                 
                 if (response.ok) {
-                    mostrarAlerta('Vaga publicada com sucesso! Ela já está visível para os candidatos.');
+                    mostrarAlerta('Vaga publicada com sucesso!');
                     document.getElementById('form-vaga').reset();
-                    alternarFormulario(false);
+                    alternarFormulario(false); // Retorna para a lista e recarrega as vagas
                 } else {
                     mostrarAlerta(data.error || 'Erro ao publicar a vaga.', 'error');
                 }
             } catch (error) {
                 mostrarAlerta('Falha de conexão com o servidor. Tente novamente.', 'error');
             } finally {
-                btn.innerHTML = '<i class="ph ph-paper-plane-tilt mr-2 text-lg"></i> Publicar Vaga Agora';
+                btn.innerHTML = '<i class="ph ph-paper-plane-tilt mr-2 text-lg"></i> Publicar Vaga';
                 btn.disabled = false;
             }
         });
