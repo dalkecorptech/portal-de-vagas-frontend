@@ -47,43 +47,183 @@
 
     <!-- Conteúdo Principal -->
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Cabeçalho -->
         <div class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-3xl font-bold text-slate-800">Gestão de Vagas</h1>
-                <p class="text-slate-500 mt-1">Publique novas oportunidades e gerencie seus candidatos.</p>
+                <p class="text-slate-500 mt-1">Publique novas oportunidades e atraia talentos.</p>
             </div>
-            <button class="bg-brand-purple hover:bg-purple-600 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-md flex items-center">
+            <button id="btn-abrir-form" onclick="alternarFormulario(true)" class="bg-brand-purple hover:bg-purple-600 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-md flex items-center">
                 <i class="ph ph-plus-circle text-xl mr-2"></i> Publicar Vaga
             </button>
         </div>
 
-        <!-- Seção de Ações -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-10 text-center mt-10">
+        <!-- Alerta de Sistema -->
+        <div id="sys-alert" class="hidden mb-6 p-4 rounded-xl text-sm font-semibold"></div>
+
+        <!-- Seção: Lista de Vagas (Estado Vazio Inicial) -->
+        <div id="secao-lista" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-10 text-center mt-6 block">
             <i class="ph ph-briefcase text-5xl text-slate-300 mb-4"></i>
-            <h2 class="text-xl font-bold text-slate-800 mb-2">Nenhuma vaga publicada ainda</h2>
-            <p class="text-slate-500 mb-6 max-w-lg mx-auto">Comece a atrair os melhores talentos publicando sua primeira oportunidade na nossa plataforma.</p>
+            <h2 class="text-xl font-bold text-slate-800 mb-2">Painel de Vagas</h2>
+            <p class="text-slate-500 mb-6 max-w-lg mx-auto">Clique no botão acima para publicar sua primeira vaga e começar a receber candidaturas de profissionais qualificados.</p>
         </div>
+
+        <!-- Seção: Formulário de Nova Vaga (Oculto por padrão) -->
+        <div id="secao-formulario" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 hidden animate-in fade-in">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                <h2 class="text-2xl font-bold text-slate-800">Detalhes da Nova Vaga</h2>
+                <button onclick="alternarFormulario(false)" class="text-slate-400 hover:text-slate-600">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="form-vaga" class="space-y-6">
+                <!-- Linha 1: Título e Localização -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Título da Vaga *</label>
+                        <input type="text" id="vaga-titulo" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Ex: Analista de Dados Sênior">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Cidade *</label>
+                            <input type="text" id="vaga-cidade" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Ex: Curitiba">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Estado *</label>
+                            <input type="text" id="vaga-estado" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Ex: PR" maxlength="2">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Linha 2: Descrição -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Descrição Completa da Vaga *</label>
+                    <textarea id="vaga-descricao" required rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Descreva as responsabilidades, o dia a dia e os diferenciais da empresa..."></textarea>
+                </div>
+
+                <!-- Linha 3: Requisitos e Salário -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Requisitos e Diferenciais *</label>
+                        <textarea id="vaga-requisitos" required rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Ex: Experiência com GCP, Python, Looker Studio..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Faixa Salarial (Opcional)</label>
+                        <div class="flex items-center space-x-4 h-[76px]"> <!-- Alinhamento vertical com o textarea -->
+                            <div class="relative w-full">
+                                <span class="absolute left-3 top-3.5 text-slate-500 font-medium">R$</span>
+                                <input type="number" id="vaga-salariomin" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Mínimo">
+                            </div>
+                            <span class="text-slate-400 font-bold">até</span>
+                            <div class="relative w-full">
+                                <span class="absolute left-3 top-3.5 text-slate-500 font-medium">R$</span>
+                                <input type="number" id="vaga-salariomax" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Máximo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações do Formulário -->
+                <div class="flex justify-end pt-6 border-t border-slate-100 mt-8">
+                    <button type="button" onclick="alternarFormulario(false)" class="mr-4 px-6 py-3 text-slate-600 font-semibold hover:bg-slate-100 rounded-full transition-colors">Cancelar</button>
+                    <button type="submit" id="btn-salvar" class="bg-brand-purple hover:bg-purple-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all flex items-center">
+                        <i class="ph ph-paper-plane-tilt mr-2 text-lg"></i> Publicar Vaga Agora
+                    </button>
+                </div>
+            </form>
+        </div>
+
     </main>
 
-    <!-- Script de Autenticação -->
+    <!-- Script de Autenticação e Integração -->
     <script>
-        // Trava de Segurança: Verifica se o usuário está logado e é empresa
+        const API_BASE_URL = 'https://portal-vagas-backend.onrender.com/api';
+
+        // Trava de Segurança
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             const tipoUsuario = localStorage.getItem('tipo_usuario');
-
             if (!token || tipoUsuario !== 'empresa') {
-                alert('Acesso negado. Por favor, faça login como empresa.');
                 window.location.href = 'login.html';
             }
         });
 
         // Função de Logout
         function fazerLogout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('tipo_usuario');
+            localStorage.clear();
             window.location.href = 'index.html';
         }
+
+        // Controle de UI (Mostrar/Esconder Formulário)
+        function alternarFormulario(mostrar) {
+            document.getElementById('secao-lista').style.display = mostrar ? 'none' : 'block';
+            document.getElementById('secao-formulario').style.display = mostrar ? 'block' : 'none';
+            document.getElementById('btn-abrir-form').style.display = mostrar ? 'none' : 'flex';
+        }
+
+        // Sistema de Alertas Visuais
+        function mostrarAlerta(msg, tipo = 'success') {
+            const sysAlert = document.getElementById('sys-alert');
+            sysAlert.textContent = msg;
+            sysAlert.className = `mb-6 p-4 rounded-xl text-sm font-semibold block ${tipo === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+            
+            // Rola a tela suavemente para o alerta
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            setTimeout(() => sysAlert.classList.add('hidden'), 5000);
+        }
+
+        // Submissão do Formulário de Vaga
+        document.getElementById('form-vaga').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-salvar');
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin mr-2 text-lg"></i> Publicando...';
+            btn.disabled = true;
+
+            // Coleta e formata os dados numéricos
+            const minStr = document.getElementById('vaga-salariomin').value;
+            const maxStr = document.getElementById('vaga-salariomax').value;
+
+            const payload = {
+                titulo: document.getElementById('vaga-titulo').value,
+                descricao: document.getElementById('vaga-descricao').value,
+                requisitos: document.getElementById('vaga-requisitos').value,
+                cidade: document.getElementById('vaga-cidade').value,
+                estado: document.getElementById('vaga-estado').value,
+                salario_min: minStr ? parseFloat(minStr) : null,
+                salario_max: maxStr ? parseFloat(maxStr) : null
+            };
+
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/vagas`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    mostrarAlerta('Vaga publicada com sucesso! Ela já está visível para os candidatos.');
+                    document.getElementById('form-vaga').reset();
+                    alternarFormulario(false);
+                } else {
+                    mostrarAlerta(data.error || 'Erro ao publicar a vaga.', 'error');
+                }
+            } catch (error) {
+                mostrarAlerta('Falha de conexão com o servidor. Tente novamente.', 'error');
+            } finally {
+                btn.innerHTML = '<i class="ph ph-paper-plane-tilt mr-2 text-lg"></i> Publicar Vaga Agora';
+                btn.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>
