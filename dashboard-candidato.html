@@ -48,8 +48,8 @@
     <!-- Conteúdo Principal -->
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
         <header class="mb-8">
-            <h1 class="text-3xl font-bold text-slate-800">Bem-vindo ao seu painel!</h1>
-            <p class="text-slate-500 mt-2">Acompanhe suas candidaturas e encontre as melhores oportunidades.</p>
+            <h1 class="text-3xl font-bold text-slate-800">Meu Painel</h1>
+            <p class="text-slate-500 mt-2">Gerencie seu currículo e candidaturas.</p>
         </header>
 
         <!-- Cards de Resumo -->
@@ -63,53 +63,214 @@
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-semibold text-slate-600">Candidaturas Realizadas</h3>
+                    <h3 class="font-semibold text-slate-600">Candidaturas</h3>
                     <i class="ph ph-paper-plane-tilt text-2xl text-brand-purple"></i>
                 </div>
                 <p class="text-3xl font-bold text-slate-800">0</p>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-semibold text-slate-600">Perfil Preenchido</h3>
+                    <h3 class="font-semibold text-slate-600">Status do Perfil</h3>
                     <i class="ph ph-user-circle text-2xl text-green-500"></i>
                 </div>
-                <p class="text-3xl font-bold text-slate-800">20%</p>
+                <p id="perfil-status-txt" class="text-3xl font-bold text-slate-800">Incompleto</p>
                 <div class="w-full bg-slate-200 rounded-full h-2 mt-3">
-                    <div class="bg-green-500 h-2 rounded-full" style="width: 20%"></div>
+                    <div id="perfil-barra" class="bg-orange-400 h-2 rounded-full" style="width: 30%"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Seção de Ações -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center">
+        <!-- Alerta de Sistema -->
+        <div id="sys-alert" class="hidden mb-6 p-4 rounded-xl text-sm font-semibold"></div>
+
+        <!-- Estado Vazio (Sem Currículo) -->
+        <div id="secao-vazia" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center block">
             <i class="ph ph-file-text text-5xl text-slate-300 mb-4"></i>
             <h2 class="text-xl font-bold text-slate-800 mb-2">Seu currículo ainda não está completo</h2>
-            <p class="text-slate-500 mb-6 max-w-lg mx-auto">Para se candidatar às vagas do nosso portal, você precisa preencher suas experiências profissionais e habilidades.</p>
-            <button class="bg-brand-purple hover:bg-purple-600 text-white px-6 py-3 rounded-full font-semibold transition-all shadow-md">
-                Completar Meu Perfil
+            <p class="text-slate-500 mb-6 max-w-lg mx-auto">Preencha suas informações base para aumentar em até 80% as chances de match com as vagas da Inteligência Artificial.</p>
+            <button onclick="alternarFormulario(true)" class="bg-brand-purple hover:bg-purple-600 text-white px-6 py-3 rounded-full font-semibold transition-all shadow-md">
+                Criar Meu Currículo
             </button>
         </div>
+
+        <!-- Formulário de Currículo (Inicialmente Oculto) -->
+        <div id="secao-formulario" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 hidden animate-in fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-slate-800">Editar Currículo</h2>
+                <button onclick="alternarFormulario(false)" class="text-slate-400 hover:text-slate-600">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="form-curriculo" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Resumo Profissional</label>
+                    <textarea id="cur-resumo" rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Fale um pouco sobre você, sua trajetória e objetivos..."></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Habilidades Principais (Separe por vírgula)</label>
+                    <input type="text" id="cur-habilidades" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Ex: Python, SQL, Looker Studio, Gestão de Projetos">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Experiência Recente -->
+                    <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                        <h4 class="font-bold text-slate-700 mb-3"><i class="ph ph-briefcase mr-2"></i>Última Experiência</h4>
+                        <input type="text" id="exp-empresa" placeholder="Nome da Empresa" class="w-full mb-3 px-3 py-2 border border-slate-200 rounded-lg">
+                        <input type="text" id="exp-cargo" placeholder="Cargo" class="w-full mb-3 px-3 py-2 border border-slate-200 rounded-lg">
+                        <input type="text" id="exp-ano" placeholder="Período (Ex: 2021 - 2024)" class="w-full px-3 py-2 border border-slate-200 rounded-lg">
+                    </div>
+
+                    <!-- Formação Acadêmica -->
+                    <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                        <h4 class="font-bold text-slate-700 mb-3"><i class="ph ph-graduation-cap mr-2"></i>Formação Acadêmica</h4>
+                        <input type="text" id="form-inst" placeholder="Instituição (Ex: UNINTER)" class="w-full mb-3 px-3 py-2 border border-slate-200 rounded-lg">
+                        <input type="text" id="form-curso" placeholder="Nome do Curso" class="w-full mb-3 px-3 py-2 border border-slate-200 rounded-lg">
+                        <input type="text" id="form-ano" placeholder="Ano de Conclusão" class="w-full px-3 py-2 border border-slate-200 rounded-lg">
+                    </div>
+                </div>
+
+                <div class="flex justify-end pt-4 border-t border-slate-100">
+                    <button type="button" onclick="alternarFormulario(false)" class="mr-4 px-6 py-3 text-slate-600 font-semibold hover:bg-slate-100 rounded-full transition-colors">Cancelar</button>
+                    <button type="submit" id="btn-salvar" class="bg-brand-purple hover:bg-purple-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all flex items-center">
+                        Salvar Currículo
+                    </button>
+                </div>
+            </form>
+        </div>
+
     </main>
 
-    <!-- Script de Autenticação -->
+    <!-- Script de Funcionalidades API -->
     <script>
-        // Trava de Segurança: Verifica se o usuário está logado e é candidato
+        const API_BASE_URL = 'https://portal-vagas-backend.onrender.com/api';
+        
+        // Verifica Autenticação
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             const tipoUsuario = localStorage.getItem('tipo_usuario');
-
             if (!token || tipoUsuario !== 'candidato') {
-                alert('Acesso negado. Por favor, faça login como candidato.');
                 window.location.href = 'login.html';
+                return;
             }
+            carregarCurriculo();
         });
 
-        // Função de Logout
         function fazerLogout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('tipo_usuario');
+            localStorage.clear();
             window.location.href = 'index.html';
         }
+
+        function alternarFormulario(mostrar) {
+            document.getElementById('secao-vazia').style.display = mostrar ? 'none' : 'block';
+            document.getElementById('secao-formulario').style.display = mostrar ? 'block' : 'none';
+        }
+
+        function mostrarAlerta(msg, tipo = 'success') {
+            const sysAlert = document.getElementById('sys-alert');
+            sysAlert.textContent = msg;
+            sysAlert.className = `mb-6 p-4 rounded-xl text-sm font-semibold block ${tipo === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+            setTimeout(() => sysAlert.classList.add('hidden'), 4000);
+        }
+
+        // Buscar dados do currículo do banco
+        async function carregarCurriculo() {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${API_BASE_URL}/curriculo`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.curriculo) {
+                    // Preencher o frontend com os dados do banco
+                    document.getElementById('cur-resumo').value = data.curriculo.resumo_profissional || '';
+                    document.getElementById('cur-habilidades').value = (data.curriculo.habilidades || []).join(', ');
+                    
+                    // Extrair dados de JSONB (experiências e formacao)
+                    if (data.curriculo.experiencias && data.curriculo.experiencias.length > 0) {
+                        const exp = data.curriculo.experiencias[0];
+                        document.getElementById('exp-empresa').value = exp.empresa || '';
+                        document.getElementById('exp-cargo').value = exp.cargo || '';
+                        document.getElementById('exp-ano').value = exp.ano || '';
+                    }
+                    if (data.curriculo.formacao_academica && data.curriculo.formacao_academica.length > 0) {
+                        const form = data.curriculo.formacao_academica[0];
+                        document.getElementById('form-inst').value = form.instituicao || '';
+                        document.getElementById('form-curso').value = form.curso || '';
+                        document.getElementById('form-ano').value = form.ano || '';
+                    }
+
+                    // Atualizar visual do painel (Perfil Completo)
+                    document.getElementById('perfil-status-txt').textContent = "100% Completo";
+                    document.getElementById('perfil-status-txt').classList.replace('text-slate-800', 'text-green-600');
+                    document.getElementById('perfil-barra').classList.replace('bg-orange-400', 'bg-green-500');
+                    document.getElementById('perfil-barra').style.width = '100%';
+                    
+                    // Muda o botão principal para "Editar Currículo"
+                    document.querySelector('#secao-vazia h2').textContent = "Seu currículo está ativo e otimizado!";
+                    document.querySelector('#secao-vazia p').textContent = "As empresas podem encontrar seu perfil. Mantenha seus dados sempre atualizados.";
+                    document.querySelector('#secao-vazia button').textContent = "Editar Currículo";
+                }
+            } catch (error) {
+                console.error('Erro ao buscar currículo:', error);
+            }
+        }
+
+        // Enviar os dados pro banco
+        document.getElementById('form-curriculo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-salvar');
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin mr-2"></i> Salvando...';
+            btn.disabled = true;
+
+            // Formatar os dados para o Payload
+            const habTexto = document.getElementById('cur-habilidades').value;
+            const habilidadesArray = habTexto.split(',').map(h => h.trim()).filter(h => h);
+
+            const payload = {
+                resumo_profissional: document.getElementById('cur-resumo').value,
+                habilidades: habilidadesArray,
+                experiencias: [{
+                    empresa: document.getElementById('exp-empresa').value,
+                    cargo: document.getElementById('exp-cargo').value,
+                    ano: document.getElementById('exp-ano').value
+                }],
+                formacao_academica: [{
+                    instituicao: document.getElementById('form-inst').value,
+                    curso: document.getElementById('form-curso').value,
+                    ano: document.getElementById('form-ano').value
+                }]
+            };
+
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${API_BASE_URL}/curriculo`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    mostrarAlerta('Currículo salvo com sucesso e pronto para vagas!');
+                    alternarFormulario(false);
+                    carregarCurriculo(); // Recarrega os dados visuais
+                } else {
+                    mostrarAlerta(data.error || 'Erro ao salvar currículo.', 'error');
+                }
+            } catch (error) {
+                mostrarAlerta('Falha de conexão com o servidor.', 'error');
+            } finally {
+                btn.innerHTML = 'Salvar Currículo';
+                btn.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>
