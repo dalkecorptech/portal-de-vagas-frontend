@@ -9,7 +9,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Ícones Phosphor -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -27,7 +26,6 @@
     </script>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 antialiased flex items-center justify-center min-h-screen p-4">
-
     <!-- Card Centralizado -->
     <div class="bg-white rounded-3xl shadow-xl border border-slate-100 w-full max-w-md overflow-hidden">
         
@@ -41,7 +39,6 @@
             </a>
             <p class="text-sm text-slate-500 mt-2">Acesse sua conta ou cadastre-se grátis.</p>
         </div>
-
         <!-- Abas (Tabs) -->
         <div class="flex border-b border-slate-200">
             <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-4 text-center font-bold text-brand-purple border-b-2 border-brand-purple transition-colors">
@@ -51,11 +48,9 @@
                 Cadastrar
             </button>
         </div>
-
         <div class="p-8">
             <!-- Mensagens de Alerta (Sucesso/Erro) -->
             <div id="alert-message" class="hidden mb-4 p-3 rounded-lg text-sm font-semibold text-center"></div>
-
             <!-- FORMULÁRIO DE LOGIN -->
             <form id="form-login" class="space-y-5 animate-in fade-in duration-300">
                 <div>
@@ -79,7 +74,6 @@
                     Acessar Conta
                 </button>
             </form>
-
             <!-- FORMULÁRIO DE CADASTRO -->
             <form id="form-register" class="space-y-5 hidden animate-in fade-in duration-300">
                 
@@ -93,7 +87,6 @@
                     </button>
                     <input type="hidden" id="reg-tipo-usuario" value="candidato">
                 </div>
-
                 <!-- Campos Dinâmicos: Candidato -->
                 <div id="fields-candidato" class="space-y-4 block">
                     <div>
@@ -105,7 +98,6 @@
                         <input type="text" id="reg-cpf" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="000.000.000-00">
                     </div>
                 </div>
-
                 <!-- Campos Dinâmicos: Empresa -->
                 <div id="fields-empresa" class="space-y-4 hidden">
                     <div>
@@ -117,7 +109,6 @@
                         <input type="text" id="reg-cnpj" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="00.000.000/0001-00">
                     </div>
                 </div>
-
                 <!-- Campos Comuns -->
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">E-mail</label>
@@ -133,45 +124,38 @@
                         <input type="password" id="reg-senha-confirma" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="••••••••">
                     </div>
                 </div>
-
                 <button type="submit" id="btn-register" class="w-full bg-brand-dark hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex justify-center items-center">
                     Criar Minha Conta
                 </button>
             </form>
         </div>
     </div>
-
     <!-- Script de Funcionalidade e Conexão com Backend API -->
     <script>
-        // Configuração da API do Render (Atualizado conforme conversas anteriores)
-        const API_BASE_URL = 'https://portal-vagas-backend.onrender.com/auth';
-
-        // Lógica de alternância de abas (Tabs)
+        // Endpoint corrigido para refletir a topologia real do Express
+        const API_BASE_URL = 'https://portal-vagas-backend.onrender.com/api/auth';
+        
         function switchTab(tab) {
             const formLogin = document.getElementById('form-login');
             const formRegister = document.getElementById('form-register');
             const tabLogin = document.getElementById('tab-login');
             const tabRegister = document.getElementById('tab-register');
             const alertMsg = document.getElementById('alert-message');
-
-            alertMsg.classList.add('hidden'); // Limpa mensagens ao trocar de aba
-
+            alertMsg.classList.add('hidden');
+            
             if (tab === 'login') {
                 formLogin.classList.remove('hidden');
                 formRegister.classList.add('hidden');
-                
                 tabLogin.className = "flex-1 py-4 text-center font-bold text-brand-purple border-b-2 border-brand-purple transition-colors";
                 tabRegister.className = "flex-1 py-4 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 transition-colors";
             } else {
                 formLogin.classList.add('hidden');
                 formRegister.classList.remove('hidden');
-                
                 tabRegister.className = "flex-1 py-4 text-center font-bold text-brand-purple border-b-2 border-brand-purple transition-colors";
                 tabLogin.className = "flex-1 py-4 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 transition-colors";
             }
         }
-
-        // Lógica de alternância de tipo de usuário (Candidato vs Empresa)
+        
         function setUserType(type) {
             const btnCandidato = document.getElementById('btn-type-candidato');
             const btnEmpresa = document.getElementById('btn-type-empresa');
@@ -179,23 +163,19 @@
             const fieldsEmpresa = document.getElementById('fields-empresa');
             
             document.getElementById('reg-tipo-usuario').value = type;
-
             if (type === 'candidato') {
                 fieldsCandidato.classList.remove('hidden');
                 fieldsEmpresa.classList.add('hidden');
-
                 btnCandidato.className = "flex-1 py-2 text-sm font-bold bg-white text-slate-800 rounded-lg shadow-sm transition-all";
                 btnEmpresa.className = "flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all";
             } else {
                 fieldsCandidato.classList.add('hidden');
                 fieldsEmpresa.classList.remove('hidden');
-
                 btnEmpresa.className = "flex-1 py-2 text-sm font-bold bg-white text-slate-800 rounded-lg shadow-sm transition-all";
                 btnCandidato.className = "flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all";
             }
         }
-
-        // Função utilitária para exibir alertas
+        
         function showAlert(message, type = 'error') {
             const alertEl = document.getElementById('alert-message');
             alertEl.textContent = message;
@@ -204,37 +184,33 @@
             }`;
             alertEl.classList.remove('hidden');
         }
-
+        
         // Submissão do Login
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-login');
             btn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i>';
             btn.disabled = true;
-
+            
             const payload = {
                 email: document.getElementById('login-email').value,
                 senha: document.getElementById('login-senha').value
             };
-
             try {
+                // Rota corrigida para /login
                 const response = await fetch(`${API_BASE_URL}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
                 const data = await response.json();
-
                 if (response.ok) {
                     showAlert('Login realizado com sucesso! Redirecionando...', 'success');
-                    // Salva o token JWT no localStorage para manter o usuário logado
                     localStorage.setItem('token', data.token);
-                    localStorage.setItem('tipo_usuario', data.tipo_usuario);
+                    localStorage.setItem('tipo_usuario', data.usuario.tipo_usuario);
                     
-                    // Simulação de redirecionamento (Ajuste para as suas rotas reais)
                     setTimeout(() => {
-                        window.location.href = data.tipo_usuario === 'empresa' ? 'dashboard-empresa.html' : 'dashboard-candidato.html';
+                        window.location.href = data.usuario.tipo_usuario === 'empresa' ? 'dashboard-empresa.html' : 'dashboard-candidato.html';
                     }, 1500);
                 } else {
                     showAlert(data.error || 'Erro ao realizar login.');
@@ -246,49 +222,47 @@
                 btn.disabled = false;
             }
         });
-
+        
         // Submissão do Cadastro
         document.getElementById('form-register').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const senha = document.getElementById('reg-senha').value;
             const senhaConfirma = document.getElementById('reg-senha-confirma').value;
-
             if (senha !== senhaConfirma) {
                 return showAlert('As senhas não coincidem.');
             }
-
+            
             const btn = document.getElementById('btn-register');
             btn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i>';
             btn.disabled = true;
-
+            
             const tipoUsuario = document.getElementById('reg-tipo-usuario').value;
             
-            // Constrói o payload dinâmico baseado no tipo de usuário
+            // Payload 100% alinhado com o destructuring do backend
             const payload = {
                 tipo_usuario: tipoUsuario,
                 email: document.getElementById('reg-email').value,
                 senha: senha
             };
-
+            
             if (tipoUsuario === 'empresa') {
-                payload.nome_fantasia = document.getElementById('reg-empresa-nome').value;
-                payload.cnpj = document.getElementById('reg-cnpj').value;
+                payload.nome = document.getElementById('reg-empresa-nome').value;
+                payload.documento = document.getElementById('reg-cnpj').value;
             } else {
-                // Adaptar conforme a tabela 'candidatos' criada no backend
                 payload.nome = document.getElementById('reg-nome').value;
-                payload.cpf = document.getElementById('reg-cpf').value;
+                payload.documento = document.getElementById('reg-cpf').value;
             }
-
+            
             try {
-                const response = await fetch(`${API_BASE_URL}/register`, {
+                // Rota corrigida para /cadastro
+                const response = await fetch(`${API_BASE_URL}/cadastro`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
+                
                 const data = await response.json();
-
                 if (response.ok) {
                     showAlert('Conta criada com sucesso! Faça login para continuar.', 'success');
                     document.getElementById('form-register').reset();
@@ -305,5 +279,4 @@
         });
     </script>
 </body>
-                  </html>
-                  
+</html>
