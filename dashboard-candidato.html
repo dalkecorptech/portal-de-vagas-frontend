@@ -44,14 +44,14 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Conteúdo Principal -->
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
         <header class="mb-8">
             <h1 class="text-3xl font-bold text-slate-800">Meu Painel</h1>
             <p class="text-slate-500 mt-2">Gerencie seu currículo, anexo em PDF/DOC e candidaturas.</p>
         </header>
-
+        
         <!-- Cards de Resumo -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
@@ -79,10 +79,10 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Alerta de Sistema -->
         <div id="sys-alert" class="hidden mb-6 p-4 rounded-xl text-sm font-semibold"></div>
-
+        
         <!-- Estado Vazio -->
         <div id="secao-vazia" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center block">
             <i class="ph ph-file-text text-5xl text-slate-300 mb-4"></i>
@@ -92,8 +92,8 @@
                 Criar / Enviar Currículo
             </button>
         </div>
-
-        <!-- Formulário de Currículo com Upload -->
+        
+        <!-- Formulário de Currículo com Upload Inteligente -->
         <div id="secao-formulario" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 hidden animate-in fade-in">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-slate-800">Gerenciar Currículo e Anexo</h2>
@@ -103,15 +103,15 @@
             </div>
             
             <form id="form-curriculo" class="space-y-6">
-                <!-- Seção de Upload de Arquivo -->
-                <div class="p-6 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 text-center">
-                    <i class="ph ph-cloud-arrow-up text-4xl text-brand-purple mb-2"></i>
-                    <h3 class="font-bold text-slate-700 mb-1">Anexar Currículo (PDF ou DOCX)</h3>
-                    <p class="text-xs text-slate-500 mb-4">Envie seu arquivo pronto para facilitar a visualização dos recrutadores.</p>
+                <!-- Seção de Upload de Arquivo / IA -->
+                <div class="p-6 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 text-center relative transition-colors" id="dropzone">
+                    <i class="ph ph-magic-wand text-4xl text-brand-purple mb-2"></i>
+                    <h3 class="font-bold text-slate-700 mb-1">Preenchimento Automático com IA</h3>
+                    <p class="text-xs text-slate-500 mb-4">Anexe seu PDF ou DOCX. Nossa inteligência extrairá os dados e preencherá o formulário abaixo para você.</p>
                     <input type="file" id="cur-arquivo" accept=".pdf,.doc,.docx" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-100 file:text-brand-purple hover:file:bg-purple-200 cursor-pointer mx-auto"/>
-                    <p id="arquivo-atual-lbl" class="text-xs text-green-600 font-semibold mt-2"></p>
+                    <p id="arquivo-atual-lbl" class="text-sm font-semibold mt-4 text-slate-600"></p>
                 </div>
-
+                
                 <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Resumo Profissional</label>
                     <textarea id="cur-resumo" rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Fale um pouco sobre você..."></textarea>
@@ -121,7 +121,7 @@
                     <label class="block text-sm font-bold text-slate-700 mb-2">Habilidades Principais (Separe por vírgula)</label>
                     <input type="text" id="cur-habilidades" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-purple focus:outline-none" placeholder="Ex: Python, SQL, Looker Studio">
                 </div>
-
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
                         <h4 class="font-bold text-slate-700 mb-3"><i class="ph ph-briefcase mr-2"></i>Última Experiência</h4>
@@ -129,7 +129,6 @@
                         <input type="text" id="exp-cargo" placeholder="Cargo" class="w-full mb-3 px-3 py-2 border border-slate-200 rounded-lg">
                         <input type="text" id="exp-ano" placeholder="Período" class="w-full px-3 py-2 border border-slate-200 rounded-lg">
                     </div>
-
                     <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
                         <h4 class="font-bold text-slate-700 mb-3"><i class="ph ph-graduation-cap mr-2"></i>Formação Acadêmica</h4>
                         <input type="text" id="form-inst" placeholder="Instituição" class="w-full mb-3 px-3 py-2 border border-slate-200 rounded-lg">
@@ -137,11 +136,11 @@
                         <input type="text" id="form-ano" placeholder="Ano de Conclusão" class="w-full px-3 py-2 border border-slate-200 rounded-lg">
                     </div>
                 </div>
-
+                
                 <div class="flex justify-end pt-4 border-t border-slate-100">
                     <button type="button" onclick="alternarFormulario(false)" class="mr-4 px-6 py-3 text-slate-600 font-semibold hover:bg-slate-100 rounded-full transition-colors">Cancelar</button>
                     <button type="submit" id="btn-salvar" class="bg-brand-purple hover:bg-purple-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all flex items-center">
-                        Salvar Currículo e Anexo
+                        Salvar Currículo Final
                     </button>
                 </div>
             </form>
@@ -149,7 +148,11 @@
     </main>
 
     <script>
+        // Substitua pelo domínio gerado no seu Render se for diferente
         const API_BASE_URL = 'https://portal-vagas-backend.onrender.com/api';
+        
+        let arquivoUploadNome = null;
+        let arquivoUploadBase64 = null;
         
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
@@ -175,9 +178,21 @@
             const sysAlert = document.getElementById('sys-alert');
             sysAlert.textContent = msg;
             sysAlert.className = `mb-6 p-4 rounded-xl text-sm font-semibold block ${tipo === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
-            setTimeout(() => sysAlert.classList.add('hidden'), 4000);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => sysAlert.classList.add('hidden'), 5000);
         }
 
+        // Função utilitária para converter arquivo em Base64
+        const processarArquivoBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        };
+
+        // Carrega os dados existentes do banco
         async function carregarCurriculo() {
             const token = localStorage.getItem('token');
             try {
@@ -191,7 +206,7 @@
                     document.getElementById('cur-habilidades').value = (data.curriculo.habilidades || []).join(', ');
                     
                     if (data.curriculo.arquivo_nome) {
-                        document.getElementById('arquivo-atual-lbl').textContent = `Arquivo anexado: ${data.curriculo.arquivo_nome}`;
+                        document.getElementById('arquivo-atual-lbl').innerHTML = `<span class="text-green-600"><i class="ph ph-check-circle"></i> Arquivo atual: ${data.curriculo.arquivo_nome}</span>`;
                     }
 
                     if (data.curriculo.experiencias && data.curriculo.experiencias.length > 0) {
@@ -200,6 +215,7 @@
                         document.getElementById('exp-cargo').value = exp.cargo || '';
                         document.getElementById('exp-ano').value = exp.ano || '';
                     }
+
                     if (data.curriculo.formacao_academica && data.curriculo.formacao_academica.length > 0) {
                         const form = data.curriculo.formacao_academica[0];
                         document.getElementById('form-inst').value = form.instituicao || '';
@@ -221,54 +237,95 @@
             }
         }
 
+        // ==========================================
+        // GATILHO DA INTELIGÊNCIA ARTIFICIAL
+        // ==========================================
+        document.getElementById('cur-arquivo').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const lblUpload = document.getElementById('arquivo-atual-lbl');
+            const token = localStorage.getItem('token');
+            
+            // Define o arquivo no estado global para enviar no submit final
+            arquivoUploadNome = file.name;
+            lblUpload.innerHTML = `<i class="ph ph-spinner animate-spin text-brand-purple text-lg"></i> <span class="text-brand-purple">Analisando documento com Inteligência Artificial...</span>`;
+            
+            try {
+                arquivoUploadBase64 = await processarArquivoBase64(file);
+                
+                const response = await fetch(`${API_BASE_URL}/ia/processar-curriculo`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({ arquivo_dados: arquivoUploadBase64 })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.curriculo_extraido) {
+                    const iaData = data.curriculo_extraido;
+                    
+                    // Preenche automaticamente o formulário com a estrutura retornada pelo Gemini
+                    document.getElementById('cur-resumo').value = iaData.resumo_profissional || '';
+                    document.getElementById('cur-habilidades').value = (iaData.habilidades || []).join(', ');
+                    
+                    if (iaData.experiencias && iaData.experiencias.length > 0) {
+                        document.getElementById('exp-empresa').value = iaData.experiencias[0].empresa || '';
+                        document.getElementById('exp-cargo').value = iaData.experiencias[0].cargo || '';
+                        document.getElementById('exp-ano').value = iaData.experiencias[0].ano || '';
+                    }
+                    
+                    if (iaData.formacao_academica && iaData.formacao_academica.length > 0) {
+                        document.getElementById('form-inst').value = iaData.formacao_academica[0].instituicao || '';
+                        document.getElementById('form-curso').value = iaData.formacao_academica[0].curso || '';
+                        document.getElementById('form-ano').value = iaData.formacao_academica[0].ano || '';
+                    }
+
+                    lblUpload.innerHTML = `<span class="text-green-600 font-bold"><i class="ph ph-check-circle"></i> Análise concluída! Revise os campos e clique em Salvar.</span>`;
+                } else {
+                    lblUpload.innerHTML = `<span class="text-red-500"><i class="ph ph-warning-circle"></i> Falha ao extrair dados. Por favor, preencha manualmente.</span>`;
+                }
+            } catch (error) {
+                console.error("Erro na comunicação com a IA:", error);
+                lblUpload.innerHTML = `<span class="text-red-500"><i class="ph ph-warning-circle"></i> Erro de rede ao conectar com a IA. Preencha manualmente.</span>`;
+            }
+        });
+
+        // ==========================================
+        // SALVAR DADOS NO BANCO NEON.TECH
+        // ==========================================
         document.getElementById('form-curriculo').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-salvar');
             btn.innerHTML = '<i class="ph ph-spinner animate-spin mr-2"></i> Salvando...';
             btn.disabled = true;
-
-            const fileInput = document.getElementById('cur-arquivo');
-            let arquivoNome = null;
-            let arquivoDados = null;
-
-            // Converter arquivo para Base64 antes do envio
-            const processarArquivo = (file) => {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
-                    reader.readAsDataURL(file);
-                });
+            
+            const habTexto = document.getElementById('cur-habilidades').value;
+            const habilidadesArray = habTexto.split(',').map(h => h.trim()).filter(h => h);
+            
+            const payload = {
+                resumo_profissional: document.getElementById('cur-resumo').value,
+                habilidades: habilidadesArray,
+                experiencias: [{
+                    empresa: document.getElementById('exp-empresa').value,
+                    cargo: document.getElementById('exp-cargo').value,
+                    ano: document.getElementById('exp-ano').value
+                }],
+                formacao_academica: [{
+                    instituicao: document.getElementById('form-inst').value,
+                    curso: document.getElementById('form-curso').value,
+                    ano: document.getElementById('form-ano').value
+                }],
+                // Envia o arquivo apenas se houver um novo upload nesta sessão
+                arquivo_nome: arquivoUploadNome,
+                arquivo_dados: arquivoUploadBase64
             };
-
+            
+            const token = localStorage.getItem('token');
             try {
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    arquivoNome = file.name;
-                    arquivoDados = await processarArquivo(file);
-                }
-
-                const habTexto = document.getElementById('cur-habilidades').value;
-                const habilidadesArray = habTexto.split(',').map(h => h.trim()).filter(h => h);
-
-                const payload = {
-                    resumo_profissional: document.getElementById('cur-resumo').value,
-                    habilidades: habilidadesArray,
-                    experiencias: [{
-                        empresa: document.getElementById('exp-empresa').value,
-                        cargo: document.getElementById('exp-cargo').value,
-                        ano: document.getElementById('exp-ano').value
-                    }],
-                    formacao_academica: [{
-                        instituicao: document.getElementById('form-inst').value,
-                        curso: document.getElementById('form-curso').value,
-                        ano: document.getElementById('form-ano').value
-                    }],
-                    arquivo_nome: arquivoNome,
-                    arquivo_dados: arquivoDados
-                };
-
-                const token = localStorage.getItem('token');
                 const response = await fetch(`${API_BASE_URL}/curriculo`, {
                     method: 'POST',
                     headers: { 
@@ -280,16 +337,19 @@
                 
                 const data = await response.json();
                 if (response.ok) {
-                    mostrarAlerta('Currículo e anexo salvos com sucesso!');
+                    mostrarAlerta('Currículo atualizado com sucesso na base de dados!');
+                    // Limpa cache global de arquivo após salvar com sucesso
+                    arquivoUploadNome = null;
+                    arquivoUploadBase64 = null;
                     alternarFormulario(false);
                     carregarCurriculo();
                 } else {
                     mostrarAlerta(data.error || 'Erro ao salvar currículo.', 'error');
                 }
             } catch (error) {
-                mostrarAlerta('Falha ao processar arquivo ou conexão.', 'error');
+                mostrarAlerta('Falha de comunicação com o servidor.', 'error');
             } finally {
-                btn.innerHTML = 'Salvar Currículo e Anexo';
+                btn.innerHTML = 'Salvar Currículo Final';
                 btn.disabled = false;
             }
         });
