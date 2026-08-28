@@ -93,7 +93,7 @@
             </button>
         </div>
         
-        <!-- Formulário de Currículo com Leitura Automática via Gemini -->
+        <!-- Formulário de Currículo -->
         <div id="secao-formulario" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 hidden animate-in fade-in">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-slate-800">Gerenciar Currículo e Anexo</h2>
@@ -103,7 +103,7 @@
             </div>
             
             <form id="form-curriculo" class="space-y-6">
-                <!-- Seção de Upload de Arquivo / Leitura Inteligente -->
+                <!-- Seção de Upload de Arquivo / IA -->
                 <div class="p-6 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 text-center relative" id="dropzone">
                     <i class="ph ph-magic-wand text-4xl text-brand-purple mb-2"></i>
                     <h3 class="font-bold text-slate-700 mb-1">Preenchimento Automático com Inteligência Artificial</h3>
@@ -203,7 +203,7 @@
                     document.getElementById('cur-habilidades').value = (data.curriculo.habilidades || []).join(', ');
                     
                     if (data.curriculo.arquivo_nome) {
-                        document.getElementById('arquivo-status-lbl').innerHTML = `<span class="text-green-600"><i class="ph ph-check-circle"></i> Arquivo ativo: ${data.curriculo.arquivo_nome}</span>`;
+                        document.getElementById('arquivo-status-lbl').innerHTML = `<span class="text-green-600"><i class="ph ph-check-circle"></i> Arquivo salvo: ${data.curriculo.arquivo_nome}</span>`;
                     }
 
                     if (data.curriculo.experiencias && data.curriculo.experiencias.length > 0) {
@@ -234,7 +234,7 @@
             }
         }
 
-        // GATILHO AUTOMÁTICO DE LEITURA POR IA AO SELECIONAR ARQUIVO
+        // DISPARO AUTOMÁTICO DE LEITURA POR IA AO ANEXAR ARQUIVO
         document.getElementById('cur-arquivo').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -243,7 +243,7 @@
             const token = localStorage.getItem('token');
             
             arquivoUploadNome = file.name;
-            lblStatus.innerHTML = `<i class="ph ph-spinner animate-spin text-brand-purple text-lg inline-block"></i> <span class="text-brand-purple">Analisando documento com Inteligência Artificial...</span>`;
+            lblStatus.innerHTML = `<i class="ph ph-spinner animate-spin text-brand-purple text-lg inline-block"></i> <span class="text-brand-purple font-semibold">Analisando documento com Inteligência Artificial...</span>`;
             
             try {
                 arquivoUploadBase64 = await processarArquivoBase64(file);
@@ -277,17 +277,17 @@
                         document.getElementById('form-ano').value = iaData.formacao_academica[0].ano || '';
                     }
 
-                    lblStatus.innerHTML = `<span class="text-green-600 font-bold"><i class="ph ph-check-circle"></i> Leitura por IA concluída com sucesso! Revise os dados abaixo e clique em Salvar.</span>`;
+                    lblStatus.innerHTML = `<span class="text-green-600 font-bold"><i class="ph ph-check-circle"></i> Leitura por IA concluída! Confira os dados extraídos abaixo e clique em Salvar.</span>`;
                 } else {
-                    lblStatus.innerHTML = `<span class="text-red-500"><i class="ph ph-warning-circle"></i> ${data.error || 'Não foi possível extrair dados automaticamente. Preencha manualmente.'}</span>`;
+                    lblStatus.innerHTML = `<span class="text-red-500"><i class="ph ph-warning-circle"></i> ${data.error || 'Não foi possível ler o arquivo automaticamente.'}</span>`;
                 }
             } catch (error) {
-                console.error("Erro na chamada da IA:", error);
-                lblStatus.innerHTML = `<span class="text-red-500"><i class="ph ph-warning-circle"></i> Erro de rede ao conectar com a IA. Preencha os campos manualmente.</span>`;
+                console.error("Erro na comunicação com a IA:", error);
+                lblStatus.innerHTML = `<span class="text-red-500"><i class="ph ph-warning-circle"></i> Falha de conexão ao comunicar com a IA.</span>`;
             }
         });
 
-        // SALVAR NO BANCO DE DADOS
+        // PERSISTÊNCIA DOS DADOS NO BANCO POSTGRESQL (NEON)
         document.getElementById('form-curriculo').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-salvar');
@@ -327,7 +327,7 @@
                 
                 const data = await response.json();
                 if (response.ok) {
-                    mostrarAlerta('Currículo atualizado com sucesso no banco de dados!');
+                    mostrarAlerta('Currículo atualizado com sucesso na base de dados!');
                     arquivoUploadNome = null;
                     arquivoUploadBase64 = null;
                     alternarFormulario(false);
